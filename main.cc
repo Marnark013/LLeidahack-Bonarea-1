@@ -189,7 +189,7 @@ void fillDistances(std::string itemId) {
         Q.pop();
 
         if(boardInfo[actPos.y][actPos.x] != "") {
-            distancesMap[itemId][boardInfo[actPos.y][actPos.x]] = distances[actPos.y][actPos.y];
+            distancesMap[itemId][boardInfo[actPos.y][actPos.x]] = distances[actPos.y][actPos.x];
         }
         visited[actPos.y][actPos.x] = true;
         for(int i = 0; i < 4; ++i) {
@@ -199,7 +199,7 @@ void fillDistances(std::string itemId) {
             nwPos.y = actPos.y + dir.second;
             if(pos_ok(nwPos.x, nwPos.y) and passableBoard[nwPos.y][nwPos.x] and not visited[nwPos.y][nwPos.x]) {
                 Q.push(nwPos);
-                distances[nwPos.y][nwPos.x] = distances[actPos.y][actPos.y] + 1;
+                distances[nwPos.y][nwPos.x] = distances[actPos.y][actPos.x] + 1;
                 visited[nwPos.y][nwPos.x] = true;
             }
         }
@@ -215,15 +215,6 @@ void calculateDistances() {
             }
         }
     }
-}
-
-void newFill(std::string id) {
-    Pos pos = itemInfoMap[id].pos; //esta en format matriu
-    std::queue<Pos> Q;
-    VVB visited(20, VB(47, false));
-    VVI distances(20, VI(47, 0));
-    Q.push(pos);
-    std::cerr << pos.x << " " << pos.y << std::endl; 
 }
 
 //CONSULTORAS
@@ -247,18 +238,5 @@ int main()
     
     readBoard("./data/planogram_table.csv");
     readArticleInfo("./data/hackathon_article_picking_time.csv");
-    newFill("a9068");
-    /*
-    printItemMap(itemInfoMap);
-    for(int i = 0; i < boardInfo.size(); ++i) {
-        for(int j = 0;  j < boardInfo[0].size(); ++j) {
-            if(boardInfo[i][j] == "" and passableBoard[i][j]) std::cout << "  ";
-            else if(not passableBoard[i][j]) std::cout << "X ";
-            else if(boardInfo[i][j] != "") std::cout << "- ";
-        }
-        std::cout << std::endl;
-    }*/
-    
-    
-    
+    calculateDistances();
 }
