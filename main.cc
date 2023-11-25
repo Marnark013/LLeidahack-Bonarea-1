@@ -119,18 +119,18 @@ void ReadTickets()
     file.open("./data/hackathon_tickets.csv", std::ios::in);        //open file and selecting read
 
     std::string row, temp, word, auxNumeroElement; 
-    std::tm tm;
     int numeroElements;
     getline(file, row);                                             //ens petem la primera
 
     while (getline(file, row))
     {
+        std::tm tm = {};
         struct TicketInfo aux;                                      //chequear esta declaracion dentro del while
         std::stringstream s(row);
         
         getline(s, word, ';');
-        std::istringstream timeStream(word);
-        timeStream >> std::get_time(&tm, "%H:%M:%S");               //se necesitaba el iomanip
+        std::istringstream ss(word);
+        ss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");               //se necesitaba el iomanip
         aux.enter_time = std::mktime(&tm);
 
         getline(s, word, ';');
@@ -145,6 +145,7 @@ void ReadTickets()
 
         if (ite == clientsInfo.end())
         {
+            ordClients.insert(make_pair(aux.enter_time, aux.client_id));
             aux.products_list.push_back(std::make_pair(word, numeroElements));
 
             getline(s, word, ';');

@@ -58,4 +58,18 @@
             std::cout << ite->second.products_list[i].first << " cantidad " << ite->second.products_list[i].second << " " << std::endl;
         }
         ++ite;
+    }
+    
+    PRINT TIMEENTERANDCLIENTID
+
+    ReadTickets();
+    MTS::iterator ite = ordClients.begin();
+    MTS::const_iterator itefinal = ordClients.end();
+
+    while(ite != itefinal)
+    {
+        char buffer[80];
+        std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", std::localtime(&ite->first));
+        std::cout << "Id costumer: " << ite->second << " " << buffer << std::endl;
+        ++ite;
     }*/
