@@ -1,0 +1,5 @@
+NORMES PROGRAMACIÓ:
+
+- Maximo largo de linea 80 caracteres
+- Función: Primero mayuscula --exemple-> Function();
+- Inicializacion variables locales en la misma linea: --exemple-> int i = f(); o std::vector<int> v = {1, 2};
