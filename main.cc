@@ -27,9 +27,9 @@ struct itemInfo {
 
 };
 
-void readBoard() {
+void readBoard(const std::string& filename) {
     std::ifstream file;
-    file.open("planogram_table.csv");
+    file.open(filename);
     if(file.fail()) {
         std::cerr << "No s'ha obert" << std::endl;
         return;
@@ -66,12 +66,13 @@ void readBoard() {
 }
 
 int main() {
-    readBoard();
+
+    readBoard("planogram_table.csv");
     
     for(int i = 0; i < passableBoard.size(); ++i) {
         for(int j = 0;  j < passableBoard[0].size(); ++j) {
             if(passableBoard[i][j]) std::cout << "  ";
-            else std::cout << "A ";
+            else std::cout << "X ";
         }
         std::cout << std::endl;
     }
