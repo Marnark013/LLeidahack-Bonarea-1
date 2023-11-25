@@ -268,10 +268,64 @@ void printItemMap(const std::map<std::string, itemInfo>& myMap) {
     }
 }
 
+/*--------------HELD KARP-----------------*/
+
+void specialSwap(VS& setVertices, int midPosition, int endPosition)
+{
+    std::string aux = setVertices[endPosition];
+    setVertices[endPosition] = midPosition;
+    setVertices[midPosition] = aux;
+}
+
+int oneDistance(VS& setVertices, int x, int y)
+{
+    auto ite = distancesMap.find(setVertices[x]);
+    auto ite2 = ite->second.find(setVertices[y]);
+    return ite2->second;
+}
+
+int oneDistance2(std::string x, std::string y)
+{
+    auto ite = distancesMap.find(x);
+    auto ite2 = ite->second.find(y);
+   //std::cout << "tiempo entre: " << x << " y " << y << " : " << ite2->second;
+    return ite2->second;
+}
+
+//setVertices[0] MUST BE THE START
+//startVector must be 1
+int heldKarp(VS& result, VS setVertices, std::string initialVertex, std::string finalVertex, int n, int startVector, int finalVector) //n number of unique items
+{
+    if (n == 4)
+    {
+        return oneDistance2(setVertices[1], setVertices[2]) + std::min(oneDistance2(setVertices[0], setVertices[1]) + oneDistance2(setVertices[2], setVertices[3]), oneDistance2(setVertices[0], setVertices[2]) + oneDistance2(setVertices[1], setVertices[3]));
+    }
+    
+    int mini = 1e5;
+    for (int i = 0; i < n - 2; ++i)
+    {
+        VS auxVector = setVertices;
+        specialSwap(auxVector, i + startVector, finalVector - 1);
+        mini = std::min(mini, heldKarp(result, auxVector, initialVertex, auxVector[finalVector],  n - 1, startVector, finalVector - 1) + oneDistance2(setVertices[finalVector], auxVector[finalVector - 1]));
+    }
+
+    return mini;
+}
+
+/*--------------HELD KARP-----------------*/
+
 int main() 
 {
     
     readBoard("./data/planogram_table.csv");
     readArticleInfo("./data/hackathon_article_picking_time.csv");
     calculateDistances();
+    ReadClientsProperties();
+    ReadTickets();
+
+    VS result;
+    VS setVertices = {"a5724", "a8923", "a2255", "a2061", "a2089"};
+    int opt = heldKarp(result, setVertices, "a5724", "a2061", 5, 0, 4);
+
+    std::cout << opt << std::endl;
 }
