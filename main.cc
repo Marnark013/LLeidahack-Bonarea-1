@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <iomanip>
+#include <ctime>
 
 using VI = std::vector<int>;
 using VVI = std::vector<VI>;
@@ -11,10 +13,25 @@ using VS = std::vector<std::string>;
 using VVS = std::vector<VS>;
 using VB = std::vector<bool>;
 using VVB = std::vector<VB>;
+using VSI = std::vector <std::pair<std::string, int>>;
+using MTS = std::map <std::time_t, std::string>;
+using VS = std::vector <std::string>;
 
 VVS boardInfo = VVS(20, VS(47, ""));
 VVI passableBoard = VVI(20, VI(47, true));
 
+struct TicketInfo
+{
+    std::time_t enter_time;
+    std::string client_id;
+    VSI products_list;
+    std::string ticked_id;
+};
+
+using MSTI = std::map <std::string, TicketInfo>;
+
+MSTI clientsInfo; //client id to his ticket info
+MTS ordClients; //clients id ordered by the time they enter the store
 
 struct Pos {
     int x = -1;
@@ -95,29 +112,6 @@ void readArticleInfo(const std::string& filename) {
     }
     file.close();   
 }
-
-#include <sstream>
-#include <vector>
-#include <iomanip>
-#include <ctime>
-#include <map>
-
-using VSI = std::vector <std::pair<std::string, int>>;
-
-struct TicketInfo
-{
-    std::time_t enter_time;
-    std::string client_id;
-    VSI products_list;
-    std::string ticked_id;
-};
-
-using MSTI = std::map <std::string, TicketInfo>;
-using MTS = std::map <std::time_t, std::string>;
-using VS = std::vector <std::string>;
-
-MSTI clientsInfo; //client id to his ticket info
-MTS ordClients; //clients id ordered by the time they enter the store
 
 void ReadTickets()
 {
