@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Hackathon 2023</title>
+	<link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+	<h1>ROCC: Recorrido Óptimo para Completar la Compra.</h1>
+
+	<div>Carga tu archivo CSV aquí:
+		<input type="file" name="filePicker" id="filePicker" size="24" accept='.csv' alt="" />
+	</div>
+
+	<div class="divSpeed">
+		<button type="button" onclick="modifySpeed('remove')"> - </button>
+		<p id="speed_text"></p>
+		<button type="button" onclick="modifySpeed('add')"> + </button>
+	</div>
+
+	<p>Plano de la tienda.</p>
+
+	<div id="container">
+		<canvas id="supermarket">
+			Your browser does not support the HTML canvas tag.</canvas>
+	</div>
+
+	<script src="script.js"></script>
+
+</body>
+
+</html>
