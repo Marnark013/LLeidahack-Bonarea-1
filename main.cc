@@ -159,18 +159,7 @@ void ReadTickets()
     }
 }
 
-int main() {
-    ReadTickets();
-    MSTI::const_iterator ite = clientsInfo.begin();
-    MSTI::const_iterator itefinal = clientsInfo.end();
+int main() 
+{
 
-    while(ite != itefinal)
-    {
-        std::cout << "Id del cliente: " << ite->first << "Lista de elementos: " << std::endl;
-        for (int i = 0; i < ite->second.products_list.size(); ++i)
-        {
-            std::cout << ite->second.products_list[i].first << " cantidad " << ite->second.products_list[i].second << " " << std::endl;
-        }
-        ++ite;
-    }
 }
