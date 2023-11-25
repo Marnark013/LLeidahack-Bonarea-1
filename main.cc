@@ -17,16 +17,18 @@ struct TicketInfo
 };
 
 using MSTI = std::map <std::string, TicketInfo>;
+using MTS = std::map <std::time_t, std::string>;
 using VS = std::vector <std::string>;
 
-MSTI clientsInfo;
+MSTI clientsInfo; //client id to his ticket info
+MTS ordClients; //clients id ordered by the time they enter the store
 
 void ReadTickets()
 {
     std::fstream file;                                              //pointer to the file
     file.open("./data/hackathon_tickets.csv", std::ios::in);        //open file and selecting read
 
-    std:: string row, temp, word, auxNumeroElement; 
+    std::string row, temp, word, auxNumeroElement; 
     std::tm tm;
     int numeroElements;
     getline(file, row);                                             //ens petem la primera
