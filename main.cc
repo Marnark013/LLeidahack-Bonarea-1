@@ -28,10 +28,18 @@ struct TicketInfo
     std::string ticked_id;
 };
 
+struct CostumerProperties
+{
+    int step_seconds;
+    int picking_offset;
+};
+
 using MSTI = std::map <std::string, TicketInfo>;
+using MSCP = std::map <std::string, CostumerProperties>;
 
 MSTI clientsInfo; //client id to his ticket info
 MTS ordClients; //clients id ordered by the time they enter the store
+MSCP costumerStats; //stats of the costumers, step_seconds and picking_offset
 
 struct Pos {
     int x = -1;
@@ -48,7 +56,8 @@ struct itemInfo {
     itemInfo(std::string itemname, VI temps) : pickingTimes(temps), itemName(itemname) {}
 };
 
-std::map<std::string, itemInfo> itemInfoMap;
+using MSII = std::map <std::string, itemInfo>;
+MSII itemInfoMap;
 
 //posa a boardInfo id de producte quan hi ha producte (picking_pos) i false als llocs on no es pot pathear de passableBoard
 void readBoard(const std::string& filename) {
@@ -111,6 +120,31 @@ void readArticleInfo(const std::string& filename) {
         itemInfoMap[itemId] = itemInfo(itemName, v);
     }
     file.close();   
+}
+
+void ReadClientsProperties()
+{
+    std::fstream file;
+    file.open("./data/hackathon_customers_properties.csv");
+
+    std::string row, costumerid, stepseconds, pickingoffset;
+    getline(file, row);
+    struct CostumerProperties aux;
+
+    while(getline(file, row))
+    {
+        std::stringstream s(row);
+        getline(s, costumerid, ';');
+        getline(s, stepseconds, ';');
+        getline(s, pickingoffset, ';');
+
+        aux.step_seconds = stoi(stepseconds);
+        aux.picking_offset = stoi(pickingoffset);
+
+        costumerStats.insert(make_pair(costumerid, aux));
+
+        aux = {};
+    }
 }
 
 void ReadTickets()

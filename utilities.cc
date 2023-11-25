@@ -72,4 +72,16 @@
         std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", std::localtime(&ite->first));
         std::cout << "Id costumer: " << ite->second << " " << buffer << std::endl;
         ++ite;
+    }
+    
+
+
+    ReadClientsProperties();
+    MSCP::const_iterator ite = costumerStats.begin();
+    MSCP::const_iterator itefinal = costumerStats.end();
+
+    while(ite != itefinal)
+    {
+        std::cout << "Id del costumer: " << ite->first << " stepseconds: " << ite->second.step_seconds << " pickingoffset: " << ite->second.picking_offset << std::endl;
+        ++ite;
     }*/
