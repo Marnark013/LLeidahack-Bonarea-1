@@ -23,6 +23,8 @@ VVI passableBoard = VVI(20, VI(47, true));
 
 std::vector<std::pair<int, int>> dirs = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
 
+int madre = 0;
+
 enum Dir {
     Down, Right, Up, Left, None
 };
@@ -273,7 +275,7 @@ void printItemMap(const std::map<std::string, itemInfo>& myMap) {
 void specialSwap(VS& setVertices, int midPosition, int endPosition)
 {
     std::string aux = setVertices[endPosition];
-    setVertices[endPosition] = midPosition;
+    setVertices[endPosition] = setVertices[midPosition];
     setVertices[midPosition] = aux;
 }
 
@@ -288,27 +290,51 @@ int oneDistance2(std::string x, std::string y)
 {
     auto ite = distancesMap.find(x);
     auto ite2 = ite->second.find(y);
-   //std::cout << "tiempo entre: " << x << " y " << y << " : " << ite2->second;
+    std::cout << "tiempo entre: " << x << " y " << y << " : " << ite2->second << std::endl;
     return ite2->second;
 }
 
 //setVertices[0] MUST BE THE START
 //startVector must be 1
-int heldKarp(VS& result, VS setVertices, std::string initialVertex, std::string finalVertex, int n, int startVector, int finalVector) //n number of unique items
+int heldKarp(VS& result, VS setVertices, int n, int startVector, int finalVector) //n number of unique items
 {
+    ++madre;
     if (n == 4)
     {
-        return oneDistance2(setVertices[1], setVertices[2]) + std::min(oneDistance2(setVertices[0], setVertices[1]) + oneDistance2(setVertices[2], setVertices[3]), oneDistance2(setVertices[0], setVertices[2]) + oneDistance2(setVertices[1], setVertices[3]));
+        std::cout << startVector + 2 << " " << finalVector << std::endl;
+        int medio = oneDistance2(setVertices[startVector + 1], setVertices[startVector + 2]);
+        int c12 = oneDistance2(setVertices[startVector], setVertices[startVector + 1]);
+        int c13 = oneDistance2(setVertices[startVector], setVertices[startVector + 2]);
+        int c24 = oneDistance2(setVertices[startVector + 1], setVertices[startVector + 3]);
+        int c34 = oneDistance2(setVertices[startVector + 2], setVertices[startVector + 3]);
+        int onGod = medio + std::min(c12 + c34, c13 + c24);
+        std::cout << "b " <<  onGod << std::endl;
+        return onGod;
     }
     
     int mini = 1e5;
     for (int i = 0; i < n - 2; ++i)
     {
+        //std::cout << "Tamaño: " << n << std::endl;
         VS auxVector = setVertices;
         specialSwap(auxVector, i + startVector, finalVector - 1);
-        mini = std::min(mini, heldKarp(result, auxVector, initialVertex, auxVector[finalVector],  n - 1, startVector, finalVector - 1) + oneDistance2(setVertices[finalVector], auxVector[finalVector - 1]));
+        //std::cout << madre << " " << initialVertex << " " << auxVector[finalVector] << std::endl;
+        int aux33 = heldKarp(result, auxVector, n - 1, startVector, finalVector - 1);
+        //std::cout << "aiuda polipolo" << std::endl;
+        int aux43 = oneDistance2(setVertices[finalVector], auxVector[finalVector - 1]);
+        //std::cout << aux33 << " " << aux43 << std::endl; 
+        mini = std::min(mini, aux33 + aux43);
+        if (mini == aux33 + aux43)
+        {
+            result.clear();
+            for (int aa = 0; aa < auxVector.size(); ++aa)
+            {
+                result.push_back(auxVector[aa]);
+            }
+        }
     }
 
+    std::cout << "a " << mini << std::endl;
     return mini;
 }
 
@@ -324,8 +350,14 @@ int main()
     ReadTickets();
 
     VS result;
-    VS setVertices = {"a5724", "a8923", "a2255", "a2061", "a2089"};
-    int opt = heldKarp(result, setVertices, "a5724", "a2061", 5, 0, 4);
-
+    VS setVertices = {"a5724", "a8923", "a2535", "a2925", "a2221", "a8380", "a7696", "a2459", "a4355", "a6102", "a6251", "a0302"}; //a2212
+    result.push_back("a5724");
+    int opt = heldKarp(result, setVertices, 12, 0, 11);
     std::cout << opt << std::endl;
+
+    std::cout << "Camino" << std::endl;
+    for (int i = 0; i < result.size(); ++i)
+    {
+        std::cout << result[i] << std::endl;
+    }
 }
