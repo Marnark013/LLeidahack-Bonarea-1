@@ -295,7 +295,6 @@ int oneDistance2(std::string x, std::string y)
 }
 
 //setVertices[0] MUST BE THE START
-//startVector must be 1
 int heldKarp(VS& result, VS setVertices, int n, int startVector, int finalVector) //n number of unique items
 {
     ++madre;
