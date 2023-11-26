@@ -1,7 +1,5 @@
 #include "usedlibrary.hh"
 
-#include "usedlibrary.hh"
-
 using VI = std::vector<int>;
 using VVI = std::vector<VI>;
 using VS = std::vector<std::string>;
@@ -80,6 +78,9 @@ struct activeInfo {
     if (sortedPath[0].second <= 0)
       sortedPath.erase(sortedPath.begin());
   }
+  void SetPos(Pos p) {
+    pos = p;
+  }
 };
 
 using MSII = std::map<std::string, itemInfo>;
@@ -88,3 +89,4 @@ std::map<std::string, std::map<std::string, int>> distancesMap;
 std::map<std::string, int> testMap;
 
 Pos startingPoint = {28, 19};
+Pos endPoint = {34, 19};

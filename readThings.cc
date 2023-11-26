@@ -1,4 +1,4 @@
-#include "readThings.hh";
+#include "readThings.hh"
 
 // posa a boardInfo id de producte quan hi ha producte (picking_pos) i false als
 // llocs on no es pot pathear de passableBoard
@@ -103,6 +103,7 @@ void ReadTickets() {
     std::tm tm = {};
     struct TicketInfo aux; // chequear esta declaracion dentro del while
     std::stringstream s(row);
+    aux.products_list.push_back({"starting", 0});
 
     getline(s, word, ';');
     std::istringstream ss(word);
@@ -124,6 +125,7 @@ void ReadTickets() {
 
       getline(s, word, ';');
       aux.ticked_id = word;
+      aux.products_list.push_back({"end", 0});
       clientsInfo.insert(make_pair(aux.client_id, aux));
     } else {
       ite->second.products_list.push_back(std::make_pair(word, numeroElements));
@@ -153,8 +155,10 @@ void FillDistances(std::string itemId) {
     Q.pop();
 
     if (boardInfo[actPos.y][actPos.x] != "") {
-      distancesMap[itemId][boardInfo[actPos.y][actPos.x]] =
-          distances[actPos.y][actPos.x];
+      distancesMap[itemId][boardInfo[actPos.y][actPos.x]] = distances[actPos.y][actPos.x];
+    }
+    if(actPos.x == endPoint.x and actPos.y == endPoint.y) {
+      distancesMap[itemId]["end"] = distances[actPos.y][actPos.x];
     }
     visited[actPos.y][actPos.x] = true;
     for (int i = 0; i < 4; ++i) {

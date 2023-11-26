@@ -29,7 +29,8 @@ int main() {
       VS products;
       for (auto m : productsInfo)
         products.push_back(m.first);
-      VS sorted = greedySearch(products);
+      VS sorted;
+      heldKarp(sorted, products, products.size(), 0, products.size() - 1);
       VSI nwProducts;
       for (auto m : sorted)
         nwProducts.push_back({m, auxMap[m]});
@@ -51,7 +52,7 @@ int main() {
       
       Pos toGo = itemInfoMap.find(aI.sortedPath[0].first)->second.pos;
       Pos currentPos = aI.pos;
-
+      
       if(currentPos.x == toGo.x and currentPos.y == toGo.y) {       //si esta a on ha de recollir
         it->second.SetPicking(true);                                //posa picking a true
         it->second.SetItemTimeLeft(it->second.itemTimeLeft - 1);//resta un segon de picking
@@ -79,7 +80,7 @@ int main() {
         
       }
 
-      else {                                                        //si no esta on ha de recollir
+      else if(currentPos.x != endPoint.x or currentPos.y != endPoint.y){                                                        //si no esta on ha de recollir
         it->second.SetStepCd(it->second.stepCd - 1);
         if(it->second.stepCd == 0) {                                //si pot fer una passa
             it->second.SetStepCd(costumerStats.find(idIn)->second.step_seconds);  //resetejem stepCD
@@ -89,8 +90,10 @@ int main() {
             nwPos.y = currentPos.y + toGoDir.second;
             it->second.SetPos(nwPos);                                  //seteem la nova posició
             it->second.SetPicking(false);                              //posem picking a false
-        } 
-          
+        }  
+      }
+      else {
+        activeClients.erase(idIn);
       }
       std::cout << idIn << ';' << clientsInfo.find(idIn)->second.ticked_id << std::endl;  
       //char buffer[80];
