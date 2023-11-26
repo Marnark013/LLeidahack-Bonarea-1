@@ -80,6 +80,9 @@ struct activeInfo {
     if (sortedPath[0].second <= 0)
       sortedPath.erase(sortedPath.begin());
   }
+  void SetPos(Pos p) {
+    pos = p;
+  }
 };
 
 using MSII = std::map<std::string, itemInfo>;

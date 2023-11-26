@@ -30,22 +30,3 @@ int tsp(int pos, int bitmask) {
     return memo[pos][bitmask] = ans;
 }
 
-int main() {
-    // Read number of cities
-    cin >> n;
-
-    // Read distance matrix
-    /*
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            cin >> dist[i][j];
-
-            */
-    // Initialize memoization table
-
-    memset(memo, -1, sizeof memo);
-
-    cout << "The shortest path has length: " << tsp(0, 1) << endl;
-
-    return 0;
-}

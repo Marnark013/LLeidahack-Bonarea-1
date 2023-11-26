@@ -183,3 +183,83 @@ void CalculateDistances() {
   }
   FillDistances("starting");
 }
+
+std::string ClosestLeftToStart(std::set<std::string> items, std::string item) {
+  int itemX;
+  if (item == "starting")
+    itemX = startingPoint.x;
+  else {
+    itemX = itemInfoMap[item].pos.x;
+  }
+  auto it = distancesMap.find("starting");
+  std::string closestToStart = "starting";
+  std::string closestLeftToStart = "starting";
+  int minDist = 1e9;
+  int minLeft = 1e9;
+  for (auto ite = items.begin(); ite != items.end(); ++ite) {
+    Pos itemPos = itemInfoMap[*ite].pos;
+
+    if (itemPos.x < itemX) {
+      // std::cerr << itemPos.x << " " << itemX << std::endl;
+      if ((it->second.find(*ite))->second < minLeft) {
+        minLeft = (it->second.find(*ite))->second;
+        closestLeftToStart = (it->second.find(*ite))->first;
+      }
+    }
+
+    if ((it->second.find(*ite))->second < minDist) {
+      minDist = (it->second.find(*ite))->second;
+      closestToStart = (it->second.find(*ite))->first;
+    }
+  }
+  if (closestLeftToStart != "starting")
+    return closestLeftToStart;
+  else
+    return closestToStart;
+}
+
+std::vector<std::string> greedySearch(std::vector<std::string> items) {
+  std::vector<std::string> ret;
+  std::string actItem = "starting";
+  std::set<std::string> buf;
+  for (auto m : items)
+    buf.insert(m);
+
+  for (int i = 0; i < items.size(); ++i) {
+    std::string tmp = ClosestLeftToStart(buf, actItem);
+    ret.push_back(tmp);
+    buf.erase(tmp);
+  }
+  return ret;
+}
+
+std::pair<int, int> Bfs(const Pos initPos, const Pos endPos) {
+  std::queue<std::pair<Pos, std::pair<int, int>>> q_pos;
+  VVB visited(40, VB(80, false));
+
+  q_pos.push({initPos, {0, 0}});
+  while (not q_pos.empty()) {
+    Pos actPos = q_pos.front().first;
+    std::pair<int, int> fstDir = q_pos.front().second;
+    q_pos.pop();
+    if (actPos.x == endPos.x and actPos.y == endPos.y)
+      return fstDir;
+
+    visited[actPos.y][actPos.x] = true;
+
+    for (int i = 0; i < 4; ++i) {
+      std::pair<int, int> dir = dirs[i];
+      Pos nwPos;
+      nwPos.x = actPos.x + dir.first;
+      nwPos.y = actPos.y + dir.second;
+      if (PosOk(nwPos.x, nwPos.y) and passableBoard[nwPos.y][nwPos.x] and
+          !visited[nwPos.y][nwPos.x]) {
+
+        q_pos.push(
+            {nwPos, (fstDir.first == 0 and fstDir.second == 0) ? dir : fstDir});
+        visited[nwPos.y][nwPos.x] = true;
+      }
+    }
+  }
+  return {0, 0};
+}
