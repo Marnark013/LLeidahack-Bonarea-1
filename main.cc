@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iterator>
 #include <map>
+#include <ostream>
 #include <queue>
 #include <set>
 #include <sstream>
@@ -492,10 +493,13 @@ int main() {
                                   nwProducts, pickTime);
       activeClients.insert({id, act});
     }
+
+    
     for (auto it = activeClients.begin(); it != activeClients.end(); ++it) {    //actualització correcta dels customers actius
       std::string idIn = it->first;
       activeInfo aI = it->second;
-      
+      std::cerr << idIn << std::endl;
+      /*
       Pos toGo = itemInfoMap.find(aI.sortedPath[0].first)->second.pos;
       Pos currentPos = aI.pos;
 
@@ -514,7 +518,7 @@ int main() {
             }
             else if(it2->second != 0) {
                 pickT = pickingTimes[it2->second];
-            }
+            } 
             int totalPickTime = cPickTime + pickT;
             it->second.itemTimeLeft = totalPickTime;
 
@@ -545,8 +549,13 @@ int main() {
       //strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", timeInfo);
 
       //std::cout << idIn << ';' << clientsInfo.find(idIn)->second.ticked_id << ';' << it->second.pos.x << ';' << it->second.pos.y << ';' << it->second.picking << ';' << buffer << std::endl;
+    }*/
     }
-    
+    std::cerr << std::endl;
     ++actTime;
   }
+  /*
+  for(auto m : activeClients) {
+    std::cerr << m.first << " " << m.second.pos.x << "|" << m.second.pos.y << " " << m.second.picking << " " << m.second.stepCd << " " << m.second.itemTimeLeft << std::endl;
+  }*/
 }
