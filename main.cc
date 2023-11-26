@@ -99,9 +99,75 @@ std::map<std::string, std::map<std::string, int>> distancesMap;
 std::map<std::string, int> testMap;
 
 Pos startingPoint = {28, 19};
+Pos endPoint = {34, 19};
 
 bool PosOk(int x, int y) {
   return ((x >= 0 and x < 47) and (y < 20 and y >= 0));
+}
+
+void specialSwap(VS& setVertices, int midPosition, int endPosition)
+{
+    std::string aux = setVertices[endPosition];
+    setVertices[endPosition] = setVertices[midPosition];
+    setVertices[midPosition] = aux;
+}
+
+int oneDistance(VS& setVertices, int x, int y)
+{
+    auto ite = distancesMap.find(setVertices[x]);
+    auto ite2 = ite->second.find(setVertices[y]);
+    return ite2->second;
+}
+
+int oneDistance2(std::string x, std::string y)
+{
+    auto ite = distancesMap.find(x);
+    auto ite2 = ite->second.find(y);
+    //std::cout << "tiempo entre: " << x << " y " << y << " : " << ite2->second << std::endl;
+    return ite2->second;
+}
+
+//setVertices[0] MUST BE THE START
+int heldKarp(VS& result, VS setVertices, int n, int startVector, int finalVector) //n number of unique items
+{
+    ++madre;
+    if (n == 4)
+    {
+        //std::cout << startVector + 2 << " " << finalVector << std::endl;
+        int medio = oneDistance2(setVertices[startVector + 1], setVertices[startVector + 2]);
+        int c12 = oneDistance2(setVertices[startVector], setVertices[startVector + 1]);
+        int c13 = oneDistance2(setVertices[startVector], setVertices[startVector + 2]);
+        int c24 = oneDistance2(setVertices[startVector + 1], setVertices[startVector + 3]);
+        int c34 = oneDistance2(setVertices[startVector + 2], setVertices[startVector + 3]);
+        int onGod = medio + std::min(c12 + c34, c13 + c24);
+        //std::cout << "b " <<  onGod << std::endl;
+        return onGod;
+    }
+    
+    int mini = 1e5;
+    for (int i = 0; i < n - 2; ++i)
+    {
+        //std::cout << "Tamaño: " << n << std::endl;
+        VS auxVector = setVertices;
+        specialSwap(auxVector, i + startVector, finalVector - 1);
+        //std::cout << madre << " " << initialVertex << " " << auxVector[finalVector] << std::endl;
+        int aux33 = heldKarp(result, auxVector, n - 1, startVector, finalVector - 1);
+        //std::cout << "aiuda polipolo" << std::endl;
+        int aux43 = oneDistance2(setVertices[finalVector], auxVector[finalVector - 1]);
+        //std::cout << aux33 << " " << aux43 << std::endl; 
+        mini = std::min(mini, aux33 + aux43);
+        if (mini == aux33 + aux43)
+        {
+            result.clear();
+            for (int aa = 0; aa < auxVector.size(); ++aa)
+            {
+                result.push_back(auxVector[aa]);
+            }
+        }
+    }
+
+    //std::cout << "a " << mini << std::endl;
+    return mini;
 }
 
 std::pair<int, int> Bfs(const Pos initPos, const Pos endPos) {
@@ -254,7 +320,9 @@ void ReadTickets() {
     MSTI::iterator ite = clientsInfo.find(aux.client_id);
 
     if (ite == clientsInfo.end()) {
+      aux.products_list.push_back({"end", 0});
       ordClients.insert(make_pair(aux.enter_time, aux.client_id));
+      aux.products_list.push_back({"starting", 0});
       aux.products_list.push_back(std::make_pair(word, numeroElements));
 
       getline(s, word, ';');
@@ -393,7 +461,8 @@ int main() {
       VS products;
       for (auto m : productsInfo)
         products.push_back(m.first);
-      VS sorted = greedySearch(products);
+      VS sorted;
+      heldKarp(sorted, products, products.size(), 1, products.size() - 1);
       VSI nwProducts;
       for (auto m : sorted)
         nwProducts.push_back({m, auxMap[m]});
@@ -443,7 +512,7 @@ int main() {
         
       }
 
-      else {                                                        //si no esta on ha de recollir
+      else if(currentPos.x != endPoint.x or currentPos.y != endPoint.y){                                                        //si no esta on ha de recollir
         it->second.SetStepCd(it->second.stepCd - 1);
         if(it->second.stepCd == 0) {                                //si pot fer una passa
             it->second.SetStepCd(costumerStats.find(idIn)->second.step_seconds);  //resetejem stepCD
@@ -455,6 +524,9 @@ int main() {
             it->second.SetPicking(false);                              //posem picking a false
         } 
           
+      }
+      else {
+        activeClients.erase(idIn);
       }
       std::cout << idIn << ';' << clientsInfo.find(idIn)->second.ticked_id << std::endl;  
       //char buffer[80];
