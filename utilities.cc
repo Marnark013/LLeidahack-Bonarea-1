@@ -85,3 +85,12 @@
         std::cout << "Id del costumer: " << ite->first << " stepseconds: " << ite->second.step_seconds << " pickingoffset: " << ite->second.picking_offset << std::endl;
         ++ite;
     }*/
+
+
+    /*
+    std::vector<std::string> v = {"a7740", "a8923"};
+    std::vector<std::string> sorted = greedySearch(v);
+    for(auto m : sorted) std::cerr << m << " ";
+    */
+
+    //for(auto m : activeClients) std::cerr << m << std::endl;
