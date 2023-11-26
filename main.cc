@@ -89,6 +89,9 @@ struct activeInfo {
     if (sortedPath[0].second <= 0)
       sortedPath.erase(sortedPath.begin());
   }
+  void SetPos(Pos p) {
+    pos = p;
+  }
 };
 
 using MSII = std::map<std::string, itemInfo>;
@@ -314,7 +317,6 @@ std::string ClosestLeftToStart(std::set<std::string> items, std::string item) {
     Pos itemPos = itemInfoMap[*ite].pos;
 
     if (itemPos.x < itemX) {
-      // std::cerr << itemPos.x << " " << itemX << std::endl;
       if ((it->second.find(*ite))->second < minLeft) {
         minLeft = (it->second.find(*ite))->second;
         closestLeftToStart = (it->second.find(*ite))->first;
@@ -356,8 +358,7 @@ std::pair<int, int> Bfs(const Pos initPos, const Pos endPos) {
     Pos actPos = q_pos.front().first;
     std::pair<int, int> fstDir = q_pos.front().second;
     q_pos.pop();
-    if (actPos.x == endPos.x and actPos.y == endPos.y)
-      return fstDir;
+    if (actPos.x == endPos.x and actPos.y == endPos.y) return fstDir;
 
     visited[actPos.y][actPos.x] = true;
 
@@ -368,7 +369,6 @@ std::pair<int, int> Bfs(const Pos initPos, const Pos endPos) {
       nwPos.y = actPos.y + dir.second;
       if (PosOk(nwPos.x, nwPos.y) and passableBoard[nwPos.y][nwPos.x] and
           !visited[nwPos.y][nwPos.x]) {
-
         q_pos.push(
             {nwPos, (fstDir.first == 0 and fstDir.second == 0) ? dir : fstDir});
         visited[nwPos.y][nwPos.x] = true;
@@ -466,10 +466,10 @@ int main() {
   std::map<std::string, activeInfo> activeClients;
 
   while (actTime < endTime) {
-    if (ordClients.find(actTime) != ordClients.end()) {
-      std::string id = (ordClients.find(actTime)->second);
-      TicketInfo personTicket = clientsInfo.find(id)->second;
-      VSI productsInfo = personTicket.products_list;
+    if (ordClients.find(actTime) != ordClients.end()) { // si s'ha de inicialitzar un fill en el temps actual
+      std::string id = (ordClients.find(actTime)->second); //id del fill a inicialitzar
+      TicketInfo personTicket = clientsInfo.find(id)->second;   //agafem ticketinfo
+      VSI productsInfo = personTicket.products_list;            //retorna vector<string, int> amb nomProducte, quantitat a agafar
       std::map<std::string, int> auxMap;
       for (auto m : productsInfo)
         auxMap[m.first] = m.second;
@@ -482,7 +482,7 @@ int main() {
         nwProducts.push_back({m, auxMap[m]});
       CostumerProperties cp = costumerStats.find(id)->second;
       itemInfo iI = itemInfoMap.find(nwProducts[0].first)->second;
-      int pickT;
+      int pickT;                    //pickT es temps de picking sense cd de customer
       if (nwProducts[0].second >= 5)
         pickT = iI.pickingTimes[4];
       else
@@ -492,15 +492,61 @@ int main() {
                                   nwProducts, pickTime);
       activeClients.insert({id, act});
     }
-    for (auto it = activeClients.begin(); it != activeClients.end(); ++it) {
-      std::string id = it->first;
+    for (auto it = activeClients.begin(); it != activeClients.end(); ++it) {    //actualització correcta dels customers actius
+      std::string idIn = it->first;
       activeInfo aI = it->second;
-      Pos currentPos = aI.pos;
+      
       Pos toGo = itemInfoMap.find(aI.sortedPath[0].first)->second.pos;
-      std::pair<int, int> toGoDir = Bfs(currentPos, toGo);
-      std::cerr << toGoDir.first << " " << toGoDir.second << std::endl;
-    }
+      Pos currentPos = aI.pos;
 
-    //++actTime;
+      if(currentPos.x == toGo.x and currentPos.y == toGo.y) {       //si esta a on ha de recollir
+        it->second.SetPicking(true);                                //posa picking a true
+        it->second.SetItemTimeLeft(it->second.itemTimeLeft - 1);//resta un segon de picking
+        if(it->second.itemTimeLeft == 0) {                   //si s'ha acabat el temps de picking
+            auto it2 = it->second.sortedPath.begin(); //it a path<string, int> a calcular
+            it2->second = it2->second - 1;                      // li resta 1 al int del path (s'ha pickeat 1 unitat)
+            int cPickTime = costumerStats.find(idIn)->second.picking_offset;//hem de setear el temps de picking nou
+            int pickT;
+            std::string itemId = it->second.sortedPath.begin()->first;
+            VI pickingTimes = itemInfoMap.find(itemId)->second.pickingTimes;
+            if(it2->second >= 5) {
+                pickT = pickingTimes[4];
+            }
+            else if(it2->second != 0) {
+                pickT = pickingTimes[it2->second];
+            }
+            int totalPickTime = cPickTime + pickT;
+            it->second.itemTimeLeft = totalPickTime;
+
+            if(it2->second == 0) {                              //si ja no queden
+                it->second.sortedPath.erase(it->second.sortedPath.begin()); //et carregues la instancia
+                it->second.SetPicking(false);               //poses picking a false
+            }
+        }
+        
+      }
+
+      else {                                                        //si no esta on ha de recollir
+        it->second.SetStepCd(it->second.stepCd - 1);
+        if(it->second.stepCd == 0) {                                //si pot fer una passa
+            it->second.SetStepCd(costumerStats.find(idIn)->second.step_seconds);  //resetejem stepCD
+            std::pair<int, int> toGoDir = Bfs(currentPos, toGo);        //calculem direcció a la que anar
+            Pos nwPos;
+            nwPos.x = currentPos.x + toGoDir.first;
+            nwPos.y = currentPos.y + toGoDir.second;
+            it->second.SetPos(nwPos);                                  //seteem la nova posició
+            it->second.SetPicking(false);                              //posem picking a false
+        } 
+          
+      }
+      std::cout << idIn << ';' << clientsInfo.find(idIn)->second.ticked_id << std::endl;  
+      //char buffer[80];
+      //struct tm * timeInfo = localtime(&actTime);
+      //strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", timeInfo);
+
+      //std::cout << idIn << ';' << clientsInfo.find(idIn)->second.ticked_id << ';' << it->second.pos.x << ';' << it->second.pos.y << ';' << it->second.picking << ';' << buffer << std::endl;
+    }
+    
+    ++actTime;
   }
 }
