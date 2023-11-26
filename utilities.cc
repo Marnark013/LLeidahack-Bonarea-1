@@ -94,3 +94,19 @@
     */
 
     //for(auto m : activeClients) std::cerr << m << std::endl;
+
+    /*
+    void PrintItemMap(const std::map<std::string, itemInfo> &myMap) {
+  for (const auto &pair : myMap) {
+    std::cout << "Key: " << pair.first << std::endl;
+    std::cout << "Item Name: " << pair.second.itemName << std::endl;
+    std::cout << "Position: " << pair.second.pos.x << " " << pair.second.pos.y
+              << std::endl;
+    std::cout << "Values: ";
+    for (int value : pair.second.pickingTimes) {
+      std::cout << value << " ";
+    }
+    std::cout << "\n\n"; // Separate entries with empty lines
+  }
+}
+    **/
