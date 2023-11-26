@@ -99,3 +99,41 @@ int heldKarp(VS& result, VS setVertices, int n, int startVector, int finalVector
     return mini;
 }
 /*--------------HELD KARP-----------------*/
+/*--------------SUEÑOS ROTOS--------------*/
+void calcRadi(std::string& radi, TicketInfo bill)
+{
+  int radiDistance = 10e8;
+  auto ite = distancesMap.begin();
+  auto itef = distancesMap.end();
+  
+  while(ite != itef)
+  {
+    auto ite2 = ite->second.begin();
+    auto ite2f = ite->second.end();
+    int maxim = 0;
+    std::string previMaxim = "?";
+
+    while(ite2 != ite2f)
+    {
+      if (ite2->second > maxim)
+      {
+        maxim = ite2->second;
+        previMaxim = ite2->first;
+      }
+      ++ite2;
+    }
+    if ((maxim < radiDistance) and previMaxim != "?")
+    {
+      radiDistance = maxim;
+      radi = previMaxim;
+    }
+    ++ite;
+  }
+}
+
+void calcMinim(VS& result, TicketInfo bill)
+{
+  std::string radi;
+  calcRadi(radi, bill);
+}
+/*--------------SUEÑOS ROTOS--------------*/

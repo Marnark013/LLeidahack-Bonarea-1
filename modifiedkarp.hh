@@ -9,3 +9,7 @@ int oneDistance(VS& setVertices, int x, int y);
 int oneDistance2(std::string x, std::string y);
 
 int heldKarp(VS& result, VS setVertices, int n, int startVector, int finalVector);
+
+void calcRadi(std::string& radi, TicketInfo bill);
+
+void calcMinim(VS& result, TicketInfo bill);

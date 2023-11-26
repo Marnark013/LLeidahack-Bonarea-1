@@ -1,4 +1,4 @@
-#include "dataStructures.hh";
+#include "dataStructures.hh"
 
 void ReadBoard(const std::string &filename);
 

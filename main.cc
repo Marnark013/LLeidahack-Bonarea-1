@@ -18,7 +18,7 @@ int main() {
 
   std::map<std::string, activeInfo> activeClients;
 
-  while (actTime < endTime) {
+  while (actTime < endTime) { //actTime < endTime
     if (ordClients.find(actTime) != ordClients.end()) {
       std::string id = (ordClients.find(actTime)->second);
       TicketInfo personTicket = clientsInfo.find(id)->second;
