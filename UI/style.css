@@ -1,0 +1,51 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#container {
+	border-top: 4px solid rgba(123, 194, 194, 0.500);
+    border-left: 4px solid rgba(123, 194, 194, 0.500);
+    border-right: 4px solid rgba(123, 194, 194, 0.500);
+    border-bottom: 4px;
+	width: 1880px;
+	height: 800px;
+	background-image: url("img/planogram_image.svg");
+	background-repeat: no-repeat;
+	background-size: 1880px 800px;
+}
+
+.divSpeed {
+    display: flex;
+    width: 20em;
+    justify-content: space-around;
+}
+
+.divSpeed button {
+    width: 3em;
+    height: 3em;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+#tablaTickets{
+    width: max-content;
+}
+th{
+    text-align: center;
+    background-color: rgb(95, 239, 150);
+}
+
+table, th, td{
+    border: 1px solid #000;
+    border-collapse: collapse;
+    position: relative;
+}
+
+th,td{
+    padding: 10px;
+}
