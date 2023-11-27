@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Hackathon 2023</title>
+	<link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+		<h1>ROCC: Recorrido Óptimo para Completar la Compra.</h1>
+		<br>
+		<br>
+		<div>Carga tu archivo CSV aquí:
+			<input type="file" name="filePicker" id="filePicker" size="24" accept='.csv' alt="" />
+			Carga el mapa del super: 
+			<input type="file" name="filePickerMap" id="filePickerMap" size="24" accept='.csv' alt=""/>
+		</div>
+		<br>
+		<div>Tiempo Actual:
+			<label id="timeId">09:00</label>
+		</div>
+		<br>
+		<div class="divSpeed">
+			<button type="button" onclick="modifySpeed('remove')"> - </button>
+			<p id="speed_text"></p>
+			<button type="button" onclick="modifySpeed('add')"> + </button>
+		</div>
+
+		<p>Plano de la tienda.</p>
+		<div id="container" >
+			<canvas id="supermarket">
+				Your browser does not support the HTML canvas tag.</canvas>
+		</div>
+		<br>
+		<br>
+		<table id="tablaTickets">
+			<tr>
+				<th>Estado Ruta</th>
+				<th>Nº Cliente/a</th>
+				<th>Hora Entrada</th>
+				<th>Hora Salida</th>
+				<th>Duración</th>
+				<th>Nº Ticket</th>
+			<!--<th>Cantidad Artículos</th>-->
+			</tr>
+		</table> 
+		<br>
+		<p>Número de clientes en tienda:</p>
+		<lable id="nPers">0</lable>
+		<br>
+	<script src="script.js"></script>
+	
+</body>
+
+</html>
