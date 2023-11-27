@@ -1,3 +1,9 @@
+/**
+ * Creators: Marc Ortega and Ferran Benéitez
+ * Project for HackEPS BonArea
+ * Last Update: 27-11-2023
+*/
+
 #include <ctime>
 #include <fstream>
 #include <iomanip>
